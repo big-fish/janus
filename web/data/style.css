@@ -1,0 +1,152 @@
+/*
+Theme Name: Aurora
+Theme URI: http://www.mbwebdesign.co.uk/templates/wordpress
+Description: This is a theme by Mathew Browne of <a href="http://www.mbwebdesign.co.uk">MB Web Design</a>. The stunning photograph is courtesy of Nick Russill. <a href="http://www.flickr.com/photos/nickrussill/150410999/in/set-72157594268277630/">Click here</a> to view the photo in its full glory. Theme is widget- and Gravatar- ready, compatible with Wordpress 2.3 to 2.6
+Version: 2.0.1
+Tags: dark, green, sandbox, aurora, fixed width, two columns, widget ready, clean, 2 column, 2 columns, 1024, 1024px, black
+Author: Mathew Browne, MB Web Design
+Author URI: http://www.mbwebdesign.co.uk
+Latest updated: October 1, 2008
+*/
+
+/* CSS RESET */
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, font, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend, caption{
+	margin: 0;
+	padding: 0;
+	border: 0;
+	outline: 0;
+	font-weight: inherit;
+	font-style: inherit;
+	font-size: 100%;
+	font-family: inherit;
+	vertical-align: baseline;
+}
+/* remember to define focus styles! */
+:focus {
+	outline: 0;
+}
+body {
+	line-height: 1;
+	color: black;
+}
+ol, ul {
+	list-style: none;
+}
+
+caption{
+	text-align: left;
+	font-weight: normal;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+	content: "";
+}
+blockquote, q {
+	quotes: "" "";
+}
+
+/* END CSS RESET */
+
+html{ background-color:#262927; font-family:Tahoma, Arial, Helvetica, sans-serif}
+#wrapper{margin:0px auto; margin-top:20px;background-color:#181B19; width:960px; border:1px solid #383C37;
+font-family: 'Trebuchet MS', Tahoma, Arial, Helvetica, sans-serif;
+font-size:0.7em;
+line-height:1.4em;}
+
+#header{background-image:url('../data/janus.jpg'); width:920px; height:250px; background-repeat:no-repeat;margin:20px auto;padding-top:10px;}
+#blog-title,#blog-description{margin-top:10px;margin-left:10px;}
+#blog-title *{color:white; text-decoration:none}
+#blog-description *,#blog-description{color:#DDDCD2;}
+
+.sidebar{float:right; width:300px;margin-right:20px;margin-bottom:19px; color:#C1BCAC; background-color:#1f2320; border:1px solid #262927;padding:10px 0px 10px 0px;}
+#container{float:left; width:580px; margin-left:20px;  color:#C1BCAC; font-size:1.1em;margin-bottom:19px;}
+
+#container blockquote{margin:0;padding:5px;background-color:#1f2320; border-top:1px solid #262927;border-bottom:1px solid #262927;}
+#container blockquote blockquote{margin:0px 10px;padding:5px;background-color:#1f2320; border-top:1px solid #262927;border-bottom:1px solid #262927;}
+
+.post {padding-bottom:30px;}
+
+.clearboth{clear:both;}
+.page-link{clear:both;width:100%;}
+
+/*  -----|  Typography  |---------------------------------------------------  */
+ a{color:white; text-decoration:none;}
+ a:hover{text-decoration:underline;}
+
+h1, h2, h3, h4, h5, h6, #container blockquote, .entry-date,#wp-calendar caption {margin-bottom:0.8em; font-family: Georgia, 'Times New Roman', serif; font-weight: normal; margin-top:0px; padding-top:0px;line-height:1.3em;}
+h1{font-size:1.7em;}
+h2{font-size:1.4em;}
+h3, #wp-calendar caption{font-size:1.2em;}
+p, #container li{margin-bottom:0.9em;margin-top:0.5em;line-height:1.7em;}
+td{line-height:1.7em; padding-right:10px;}
+blockquote p{margin-bottom:0.5em;}
+
+#container ul{ list-style-type:disc;padding-left:2em;}
+#container ol{ list-style-type: decimal;padding-left:2em;}
+
+.day{font-size:2em; color:white;}
+
+#container h1{ color:#CADE58; border-bottom:1px solid #262927; margin-bottom:20px;display:block;}
+#container h1 a,#container h2 a{color:#CADE58;padding-bottom:10px;display:block;text-decoration:none;}
+#container h1 a:hover,#container h2 a:hover{background-color:#262927;}
+h2,h3,h4,h5,h6{color:#CADE58;}
+.author{padding-bottom:5px;}
+#container h2 a{border-bottom:1px solid #262927;}
+#container .entry-meta{border-top:none;clear:both;line-height:1.4em;padding-bottom:10px;}
+.entry-content{clear:both;}
+
+
+/*DATE*/
+
+.entry-date{float:right;border:1px solid #262927; background-color:#262927;padding:2px 5px 2px 5px;margin:0px 0px 10px 10px;}
+.entry-date *{text-align:center;}
+
+.sidebar ul, .sidebar ul li{list-style-type:none; padding:0;margin:0}
+.sidebar ul{margin:0px 20px 0px 20px;}
+.sidebar ul ul{margin:0px;}
+.sidebar ul li{margin-bottom:15px;margin-top:15px;}
+.sidebar ul li ul li{margin-bottom:5px;margin-top:5px;}
+
+#wp-calendar, .calendar_wrap{width:100%; text-align:center;}
+#wp-calendar caption{color:#CADE58;}
+#wp-calendar td,#wp-calendar th{text-align:center;}
+#wp-calendar th{font-weight:bold;}
+#wp-calendar a{color:#CADE58; background-color:#181B19; border:1px solid #262927; display:block; text-align:center}
+#wp-calendar a:hover{color:#CADE58; background-color:#262927; display:block; border:1px solid #262927;text-decoration:none;}
+
+#footer{margin:10px auto; font-size:0.7em; padding:5px 0px 5px 0px; width:920px; color:#666666; text-align:right}
+#footer a{color:#666666;}
+.meta-sep{color:#333333;}
+
+.nav-previous{float:left; width:45%;}
+.nav-next{float:right; width:45%; text-align:right;}
+.nav-previous a, .nav-next a{display:block;padding:3px; color:#CADE58; background-color:#1f2320; border:1px solid #262927;}
+.nav-previous a:hover, .nav-next a:hover{ background-color:#262927; color:white; text-decoration:none;}
+.navigation{margin-bottom:20px;margin-top:20px;}
+
+.entry-meta{border-top:1px solid #262927;margin-top:20px;padding-top:10px;}
+
+abbr{border:none;}
+
+#s{border:1px solid #262927; background:#181B19; width:180px; color: #C1BCAC;padding:3px;}
+#searchsubmit{border:1px solid #262927; width:50px;background:#262927; color:#C1BCAC;padding:3px;}
+#searchsubmit:hover{color:#CADE58;border:1px solid #C1BCAC;}
+
+#noresults-s,#comment{border:1px solid #383C37; background:#262927; width:180px; color: #C1BCAC;padding:3px;}
+#comment{width:450px;}
+#noresults-searchsubmit{border:1px solid #262927; width:50px;background:#262927; color:#C1BCAC;padding:3px;}
+#submit{border:1px solid #262927; background:#262927; color:#C1BCAC;padding:3px;margin-top:5px;}
+#noresults-searchsubmit:hover{color:#CADE58;border:1px solid #C1BCAC;}
+#submit:hover{color:#CADE58;border:1px solid #C1BCAC;}
+
+.alignright{float:right; margin:10px 0px 5px 10px;}
+.alignleft{float:left; margin:10px 10px 5px 0px;}
+.aligncenter{margin:10px auto;}
+
+.avatar{float:right; padding:5px; border:1px solid #999999; background-color:#FFFFFF;} 

@@ -1,0 +1,479 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html dir="ltr" xmlns="http://www.w3.org/1999/xhtml" lang="en-US">
+<head profile="http://gmpg.org/xfn/11">
+<title>Janus » View Dependent Desktop VR using Head Tracking</title>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<link rel="stylesheet" type="text/css" href="data/style.css">
+</head>
+<body>
+
+<div id="wrapper" class="hfeed">
+
+	<div id="header">
+		<h1 id="blog-title"><span><a href="http://home.in.tum.de/~lazarov/janus/" title="Janus" rel="Janus">Janus</a></span></h1>
+		<div id="blog-description">View Dependent Desktop VR using Head Tracking based on Digital Image Processing</div>
+	</div><!--  #header -->
+
+	<div id="container">
+		<div id="content">
+
+
+			<div id="post-1" class="hentry p1 post publish">
+				<div class="entry-date">
+					<div class="month">Nov</div>
+					<div class="day">07</div>
+					<div class="year">2008</div>
+				</div>
+				<h1 class="entry-title">Abstract</h1>
+                
+				<div class="entry-content">
+					<p><strong>Janus</strong> is a program which gives the user an enhanced 
+				   	3D impression of objects shown on a screen without having to
+						wear special 3D glasses. This is done by adapting the scene shown on
+						the screen according to the angle in which the user looks at the
+						screen. 
+						<br /><br />
+						Imagine a real-time rendered cube in a 3D environment. When
+						your head is in front of of the screen, the cube is shown from the
+						front. But as you move your head to the right (while still looking at
+						the center of the screen), the cube will begin to turn clockwise, so
+						that you can see its right side.
+						<br /><br />
+						You can also imagine your screen as a window through which you are
+						viewing a scene (for example a landscape). When you move left or right
+						you see more of the right/left part of the landscape outside.
+						Moving towards the window shows you more details, while moving away
+						you are seeing a smaller part of the world outside.
+						<br /><br />
+						The DIP-part of this is to estimate the viewing angle with help of a
+						webcam mounted above the screen.
+					</p>
+					<div class="clearboth"></div>
+				</div>
+			</div><!-- .post -->
+			
+			<div id="post-2" class="hentry p1 post publish">
+				<!-- <div class="entry-date">
+					<div class="month">Nov</div>
+					<div class="day">07</div>
+					<div class="year">2008</div>
+				</div> -->
+				<h1 class="entry-title">Video</h1>
+                
+				<div class="entry-content">
+					<p>Here's how Janus works now:</p>
+					<embed src="data/flvplayer.swf" flashvars="&file=http://home.in.tum.de/~lazarov/janus/data/videos/janus-action.flv&width=480" height="320" width="480"></embed>
+					<p><a href="http://home.in.tum.de/~lazarov/janus/data/videos/janus-action.avi">&raquo; Download this video.</a>
+					<br /><br />
+					And yet another video of the current status, showing the head tracking:</p>
+					<embed src="data/flvplayer.swf" flashvars="&file=http://home.in.tum.de/~lazarov/janus/data/videos/headtracking.flv&width=480" height="320" width="480"></embed>
+					<p><a href="http://home.in.tum.de/~lazarov/janus/data/videos/headtracking.avi">&raquo; Download this video.</a></p>
+					<div class="clearboth"></div>
+				</div>
+			</div><!-- .post -->		
+			
+			<div id="post-1" class="hentry p1 post publish">
+				<!-- <div class="entry-date">
+					<div class="month">Nov</div>
+					<div class="day">07</div>
+					<div class="year">2008</div>
+				</div> -->
+				<h1 class="entry-title">Implementation</h1>
+                
+				<div class="entry-content">
+					<p>The implementation of Janus has three steps (the first two are
+					part of the course project, while the third may be done after the
+					submission):</p>
+					<ol>
+						<li>Implementation of the basic structure & testing with a ping-pong ball tracking approach.</li>
+						<li>Implementation of a robust head tracking based on Haar Classifier & its optimization.</li>
+						<li>Render a OpenGL 3D world image.</li>
+					</ol>
+					<h2>Basic structure and ping-pong ball tracking</h2>
+					<p>The first implementation part included the basic structure for the
+					application. We have chosen to use C++ as implementation language
+					and the OpenCV library to support our work.
+					<br /><br />
+					The first goal was a quick & dirty implementation which defines
+					the structure for further enhancement, designing everything in modular
+					fashion to enable easy exchangeability of parts of the program
+					and first impression of the wanted project results.
+					<br /><br />
+					The main method is responsible for calling the other predefined modules,
+					and creating the help threads (if they are needed).
+					<br /><br />
+					Our first approach was based on tracking an orange ping-pong ball
+					attached to the cap of a player. See a demonstration of the idea
+					and it's realization:</p>
+					<embed src="data/flvplayer.swf" flashvars="&file=http://home.in.tum.de/~lazarov/janus/data/videos/pingpongball-tracking.flv&width=480" height="320" width="480"></embed>
+					<p><a href="http://home.in.tum.de/~lazarov/janus/data/videos/pingpongball-tracking.avi">&raquo; Download this video.</a></p>
+					<p><br /><br />
+					For the tracking we convert the image from the RGB space into the HSV
+					space, and then we scan sequentially the HSV image and search for points
+					having a predefined threshold of hue, saturation and intensity (in our case:
+					100, 120 and 200). Based on the points obtained we are calculating the
+					median of this to be the center of the ping-pong ball. Based on the
+					count of the points we are obtaining the radius of the ball (we are using
+					the function: <span style="font-family:courier new;">radius = 6*sqrt(count);</span>
+					in order to have a similar radius as the one we will obtain later on with
+					our head tracking algorithm). The rest is similar to the approach mentioned
+					below.
+					<br /><br />
+					Since the identification of the ball took too much time in this first
+					approach which made the picture "jump" from frame to frame making a
+					slightly uncomfortable experience for the user we implemented two
+					POSIX threads using the standard POSIX library of C. The main thread
+					was responsible of drawing the contents of the screen, while the
+					helper thread was doing the work for the ping-pong ball tracking. 
+					<br /><br />
+					What is more, in order for this to happen we needed to have something
+					to display while the ping-pong ball was being identified. That is why
+					we implemented an interpolation between the current found center point
+					and radius and the ones found in the previous frame. In that way we were
+					doing 5 linear interpolation steps between the two states, making the
+					user think that the face was recognized as fast as the image is drawn
+					on the screen.				
+					<br /><br />					
+					The threads had significant impact on the performance of the program making
+					the solution robust and acceptable.
+					</p>
+					<h2>Head tracking based on Haar Classifier</h2>
+					<p>Although, the ping-pong ball solution was now good enough it had one
+					major drawback - the user had to wear a cap with an attached orange 
+					ping-pong ball, which we found to be looking a little too foolish ;-).
+					<br /><br />
+					Therefore, we switched to real head tracking. OpenCV offers a
+					a very good engine for face recognition, based on the Harr classifier.
+					The function <span style="font-family:courier new;">cvHaarDetectObjects</span>
+					finds rectangular regions in the given image that are likely to contain
+					objects the cascade has been trained for and returns those regions as a
+					sequence of rectangles. The function scans the image several times at 
+					different scales. Each time it considers overlapping regions in the 
+					image and applies the classifiers to the regions. It may also apply 
+					some heuristics to reduce number of analyzed regions, such as Canny 
+					prunning. After it has proceeded and collected the candidate rectangles
+					(regions that passed the classifier cascade), it groups them and 
+					returns a sequence of average rectangles for each large enough group.
+					The default parameters (scale_factor=1.1, min_neighbors=3, flags=0) are 
+					tuned for accurate yet slow object detection. 
+					<br /><br />
+					However, we needed faster operations since our program was dealing with
+					a real time stream of images. The proposed settings in the OpenCV documentation
+					did not really optimize the data. So we first scaled the image to be 50%
+					of the original size to improve speed, converted it to grayscale and
+					normalized the histogram to improve the accuracy. Now, with the
+					thread approach mentioned above we could manage to get reasonable
+					results.
+					<br /><br />
+					Nevertheless, we continued searching for options to improve the speed
+					and came up with the <span style="font-family:courier new;">CV_FIND_BIGGEST_OBJECT</span>
+					flag which could be set in the flag argument. This way the algorithm
+					analyzes only the region which had the biggest found object, which
+					in our case turns out to be exactly the one we want - the face. The
+					parameter however is not available in the current stable release
+					OpenCV 1.0, but in the one available from subversion OpenCV 1.1.0.
+					<br /><br />
+					Once we had a nice and robust method for identifying the face
+					we could easily obtain the center of the face, and calculate the radius.
+					Here's an excerpt from the code how:<br /><br />
+					</p><blockquote><pre><span style="font-family:courier new;">
+CvPoint center;
+int radius, radius_temp;
+int radius_old = 0;
+for(int i = 0; i < faces->total ; i++) {
+    CvRect* r = (CvRect*)cvGetSeqElem( faces, i );
+    radius_temp = cvRound((r->width + r->height)*0.25*scale);
+    if(radius_temp > radius_old) {
+    		center.x = cvRound((r->x + r->width*0.5)*scale);
+		   center.y = cvRound((r->y + r->height*0.5)*scale);
+			radius = radius_temp;
+			radius_old = radius;
+    }
+}
+</span></pre></blockquote>
+					<p>
+						Now we have a radius, and a center and can based on this values
+						render the part of the photograph which represent our perception
+						of the scene.
+					</p><blockquote><pre><span style="font-family:courier new;">
+   double speed_shift = .25;
+	double speed_zoom = 1.5;
+	
+	CvRect slice = cvRect( (speed_shift * (size.width/640) * point->center.x
+	                     + (1 - speed_shift) * (size.width/2)) - (size.width/8)
+	                     - (speed_zoom * point->radius * ((size.width/4) / 240)),
+	                     
+	                     (speed_shift * (size.height/480) * (480 - point->center.y)
+	                      + (1 - speed_shift) * (size.height/2)) - (size.height/8)
+	                      - (speed_zoom * point->radius * ((size.height/4) / 240)),
+	                      
+	                      (size.width/4) + (speed_zoom * point->radius
+	                      * ((size.width/2) / 240)),
+	                      
+	                      (size.height/4) + (speed_zoom * point->radius
+	                      * ((size.height/2) / 240)));
+	                      
+	                      
+	cvSetImageROI(landscape, slice);
+</span></pre></blockquote><p>
+						The <span style="font-family:courier new;">slice</span> CvSize object
+						is the key to the calculation of the region to be displayed.<br /><br /> 
+						There are two parameters here - the two speeds - for the 2D movement 
+						(left, right, up, down) we use the <span style="font-family:courier new;">speed_shift</span>
+						it defines how much the displayed image will be moved based on the
+						movement of the head of the user in each direction.<br /><br />
+						The second one, the <span style="font-family:courier new;">speed_zoom</span>
+						likewise specifies the same for the movements towards the screen
+						and away from the screen.<br /><br />
+						Using the <span style="font-family:courier new;">cvSetImageROI()</span>
+						function and a subsequent resize to fit the borders of our window
+						we are displaying the correct region.
+						<br /><br />
+						However, there was still one problem left and this was the "flackering"
+						of the face recognition algorithm. Although it was identifying
+						the face correct, the radius of the region which was identified was
+						varying very much between two subsequent frames. Here's a small
+						demonstration of the problem:
+					</p><embed src="data/flvplayer.swf" flashvars="&file=http://home.in.tum.de/~lazarov/janus/data/videos/unstable-headtracking.flv&width=480" height="320" width="480"></embed>
+					<p><a href="http://home.in.tum.de/~lazarov/janus/data/videos/unstable-headtracking.avi">&raquo; Download this video.</a></p>
+					<p><br /><br />
+						As you can see, although the "flackering" seems fine if we are
+						viewing the captured frame and the drawed circle, it has major
+						impact on the real image. Terefore, we needed a solution to
+						this. We discussed several different strategies, such as
+						further optimizing the algorithm by parameters, building our own,
+						or enhancing and optimizing the input frame. All of these
+						would however use too much computational power and computational
+						time. That's why we tried to find a solution based on the data
+						we already have and came up with the following idea: instead of
+						observing only the last captured frame store the data from the
+						last few frames and compute the average. For this we introduced
+						a vector which is storing the last 7 frames and is modified in
+						the identifyHead function.
+					</p><blockquote><pre><span style="font-family:courier new;">
+   vector&lt;struct Coords&gt; temp_vector = *pheadvector;
+	temp_vector.insert(temp_vector.begin(),temp);
+	if (temp_vector.size() > STABILITY) {
+		temp_vector.erase(temp_vector.end());
+	}
+	
+	*pheadvector = temp_vector;
+</span></pre></blockquote>
+					<p>
+						The drawing function then consideres all elements currently in the
+						vector, calculates the average and shows it. The result was
+						wonderful: 
+					</p>
+					<embed src="data/flvplayer.swf" flashvars="&file=http://home.in.tum.de/~lazarov/janus/data/videos/headtracking.flv&width=480" height="320" width="480"></embed>
+					<p><a href="http://home.in.tum.de/~lazarov/janus/data/videos/headtracking.avi">&raquo; Download this video.</a></p>
+					<h2>Future work: Render an OpenGL 3D world image</h2>
+					<p>
+						As seen above we have managed to achieved the desired goal for a
+						2D image, without the need of having too heavy calculations. In
+						fact the optimization of the algoritms allowed us to drop the
+						threads approach. However, life is not that simple in the
+						3D world. For an OpenGL scene we need to calculate a
+						rotation and a translation matrix, from which we can derive a
+						position matrix. This will not be able to happen
+						using only the approach from above. Here are some of our ideas
+						for the future implementation:<br /><br />
+						First, after having identified the face and it's radius
+						let us identify in which direction it is currently looking
+						(we were assuming till now that the eyes are directed to the
+						center of the screen. This however is not always the case. When you
+						move left you also turn your head to the right and thus you are
+						now longer looking exactly at the center of the screen, but
+						rather to a point on the right hand side). To do this we
+						first need to have a few popular points. This can be
+						obtained using the <span style="font-family:courier new;">cvFindGoodFeaturesToTrack()</span>
+						function of OpenCV. Here's how it looks like:
+					</p><embed src="data/flvplayer.swf" flashvars="&file=http://home.in.tum.de/~lazarov/janus/data/videos/headtracking-enhanced.flv&width=480" height="320" width="480"></embed>
+					<p><a href="http://home.in.tum.de/~lazarov/janus/data/videos/headtracking-enhanced.avi">&raquo; Download this video.</a>
+					<br /><br />
+						The next step would be to use this Good Features to Track
+						obtained points as an argument to the <span style="font-family:courier new">cvCalcOpticalFlowPyrLK()</span>
+						function. The result points obtained can be used as an
+						input for (the POSIT algorithm for) the calculation of the translation matrix and
+						rotation vector. The last step would be to give them 
+						to the GL rendering engine.
+					</p>
+					<div class="clearboth"></div>
+				</div>
+			</div><!-- .post -->	
+			
+			<div id="post-1" class="hentry p1 post publish">
+				<!-- <div class="entry-date">
+					<div class="month">Nov</div>
+					<div class="day">07</div>
+					<div class="year">2008</div>
+				</div> -->
+				<h1 class="entry-title">Obtaining the source code, compilation & running of the program</h1>
+				<div class="entry-content">
+					<p>As a prerequisite you will need to have on your system OpenCV
+					of a version 1.1 or above. Otherwise compilation will fail.
+					To run the program you will also need to have a camera attached
+					to the system and identified by your system as a camera source.
+					If this criteria is not met, the program will terminate directly
+					after running informing you about the problem.
+					<br /><br />
+					There are two ways to obtain the source code. The first is
+					using the <a href="janus.tar.gz">source package</a> (tar.gz) and the
+					second is checking out our latest subversion revision 
+					(please refer to the box on the right for the adress of the
+					subversion repository. If you want to know how to use
+					subversion there are some very good tutorials out there, just
+					google it.)
+					<br /><br />
+					If you already obtained the source code you will see that a
+					Makefile is included. You just have to type <span style="font-family:courier new;">make</span>
+					and an executable with the name <span style="font-family:courier new;">janus</span>
+					will be complied. Running it will start the program.
+					<br /><br />
+					Beware. Termination of the program is currently not implemented
+					properly. You can terminate it by killing the process using
+					the terminal or by issuing the kill command. 
+					</p>
+					<div class="clearboth"></div>
+				</div>
+			</div><!-- .post -->
+			
+			
+			<div id="post-1" class="hentry p1 post publish">
+				<!-- <div class="entry-date">
+					<div class="month">Nov</div>
+					<div class="day">07</div>
+					<div class="year">2008</div>
+				</div> -->
+				<h1 class="entry-title">Ideas, creative support, code contribution</h1>
+				<div class="entry-content">
+					<p>
+						In case you want to contact us with some bright ideas, or simply
+						want to work with us, or just criticise or praise us please
+						use our e-mail which you can find in the box on the right (right
+						below the explanation of the projects name).<br /><br />
+						The project is open source and we would be really happy to hear
+						from you if you use our source code in your application. Do
+						not hesitate to contact us and inform us about that.
+					</p>
+					<div class="clearboth"></div>
+				</div>
+			</div><!-- .post -->
+			
+			<div id="post-1" class="hentry p1 post publish">
+				<!-- <div class="entry-date">
+					<div class="month">Nov</div>
+					<div class="day">07</div>
+					<div class="year">2008</div>
+				</div> -->
+				<h1 class="entry-title">Thank you</h1>
+				<div class="entry-content">
+					<p>
+						If you are reading this you must be our instructor, or
+						teaching assistant, or really love our work. Either way,
+						thank you for giving us the opportunity to present you
+						our ideas and work and we hope to hear from you soon. 
+					</p>
+					<div class="clearboth"></div>
+				</div>
+			</div><!-- .post -->
+			
+			
+			<div id="post-1" class="hentry p1 post publish">
+				<!-- <div class="entry-date">
+					<div class="month">Nov</div>
+					<div class="day">07</div>
+					<div class="year">2008</div>
+				</div> -->
+				<h1 class="entry-title">References</h1>
+				<div class="entry-content">
+					<p>
+						<strong>D.F. DeMenthon and L.S. Davis.</strong> <em>Model-Based Object Pose
+						in 25 Lines of Code.</em> International Journal of Computer
+						Vision, Vol. 15, pp. 123-141, June 1995.
+						<br /><br />
+						<strong>OpenCV.</strong> <em>Documentation.</em> 2008.
+						<br /><br />
+						<strong>Paul Viola and Michael J. Jones.</strong> <em>Rapid Object Detection using 
+						a Boosted Cascade of Simple Features.</em> IEEE CVPR, 2001.
+						<br /><br />
+						<strong>Rainer Lienhart and Jochen Maydt.</strong> <em>An Extended Set of Haar-like 
+						Features for Rapid Object Detection.</em> IEEE ICIP 2002, Vol. 1,
+						pp. 900-903, Sep. 2002.
+					</p>
+					<div class="clearboth"></div>
+				</div>
+			</div><!-- .post -->
+			
+			
+			
+
+			
+			
+		</div><!-- #content -->
+	</div><!-- #container -->
+
+	<div id="primary" class="sidebar">
+		<ul class="xoxo">
+		
+			<li id="meta">
+				<h3>Janus</h3>
+				<p>Janus was the two-faced god of gates, doors, doorways, 
+				beginnings and endings in Roman mythology.
+				</p>
+				
+				<h3>Team Members</h3>
+				<ul>
+					<li class="page_item page-item-2">Andreas Bittracher (<a href="mailto:andreasbittracher@me.com">andreasbittracher@me.com</a>)</li>
+					<li class="page_item page-item-2">Vladislav Lazarov (<a href="mailto:lazarov@in.tum.de">lazarov@in.tum.de</a>)</li>
+				</ul>
+				
+				<h3>Pledge</h3>
+				<p>This is a course project for the course Digital Image Processing
+				at Indian Institute of Technology Bombay. Therefore we are
+				pledging on our honour that we have not given or received 
+				any unauthorized assistance on this assignment or any previous homework.	
+				</p>
+				
+				<h3>Credit</h3>
+				<p>The landscape picture currently used in the program is
+				"the alps: vista" created by <a href="http://crixu.deviantart.com/">CriXu</a>
+				</p>
+								
+			</li>
+
+			<li id="pages">
+				<h3>Subversion</h3>
+				<p>Janus is open-source (licensed under the GNU GPL v3 license). You
+				can access the source code from <a href="http://code.there4you.org/iitbdip2008/">here</a>.
+				You are free to use the whole source ot parts thereof for your own project.
+				Please write us a short note if you use parts of this, we would be happy
+				to see what you are working on, too.
+				<br />
+				<!-- Creative Commons License -->
+				<a href="http://creativecommons.org/licenses/GPL/2.0/">
+					<img alt="CC-GNU GPL" border="0" src="http://creativecommons.org/images/public/cc-GPL-a.png" />
+				</a><br />
+				<!-- /Creative Commons License -->
+				</p>
+			</li>
+			
+			
+			<li id="linkcat-2" class="linkcat"><h3>Links</h3>
+				<ul class="xoxo blogroll">
+					<li><a href="http://www.cse.iitb.ac.in/~sharat/current/cs663/page.html" title="Digital Imaging Processing @ IITB">Course Homepage</a></li>
+					<li><a href="http://www.cs.cmu.edu/~johnny/projects/wii/" title="Johny Lee Wiimote projects">Source of inspiration</a></li>
+					<li><a href="http://opencvlibrary.sourceforge.net/" title="Long Live OpenCV">Open Computer Vision Library</a></li>
+				</ul>
+			</li>
+		</ul>
+	</div><!-- #secondary .sidebar -->
+	<div class="clearboth"></div>
+</div><!-- #wrapper .hfeed -->
+
+<div id="footer">
+<span>Website design based on the wordpress theme Aurora by <a href="http://www.mbwebdesign.co.uk/" title="MB Web Design is a UK Web Designer">MB Web Design</a> | Image in the title is released in the public domain by Fubar Obfusco | Web contents are licensed under: <a rel="license" href="http://creativecommons.org/licenses/by-sa/3.0/"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by-sa/3.0/80x15.png" /></a></span>
+
+ 
+</div><!-- #footer -->
+</body>
+</html>
