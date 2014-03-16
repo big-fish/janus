@@ -78,6 +78,7 @@ for(int i = 0; i < faces->total ; i++) {
 			radius_old = radius;
     }
 }
+```
 
 Now we have a radius, and a center and can based on this values render the part of the photograph which represent our perception of the scene.
 
@@ -95,7 +96,7 @@ Now we have a radius, and a center and can based on this values render the part 
 	                      (size.height/4) + (speed_zoom * point->radius
 	                      * ((size.height/2) / 240)));                    
 	cvSetImageROI(landscape, slice);
-	
+```
 
 The `slice` CvSize object is the key to the calculation of the region to be displayed.
 
@@ -119,7 +120,7 @@ As you can see, although the "flackering" seems fine if we are viewing the captu
 		temp_vector.erase(temp_vector.end());
 	}
 	*pheadvector = temp_vector;
-	
+```	
 
 The drawing function then consideres all elements currently in the vector, calculates the average and shows it. The result was wonderful:
 
@@ -131,7 +132,7 @@ As seen above we have managed to achieved the desired goal for a 2D image, witho
 
 First, after having identified the face and it's radius let us identify in which direction it is currently looking (we were assuming till now that the eyes are directed to the center of the screen. This however is not always the case. When you move left you also turn your head to the right and thus you are now longer looking exactly at the center of the screen, but rather to a point on the right hand side). To do this we first need to have a few popular points. This can be obtained using the `cvFindGoodFeaturesToTrack()` function of OpenCV. Here's how it looks like:
 
-
+[![Enhanced Headtracking](http://img.youtube.com/vi/sYR2zPuuTmE/0.jpg)](http://www.youtube.com/watch?v=sYR2zPuuTmE)
 
 The next step would be to use this Good Features to Track obtained points as an argument to the `cvCalcOpticalFlowPyrLK()` function. The result points obtained can be used as an input for (the POSIT algorithm for) the calculation of the translation matrix and rotation vector. The last step would be to give them to the GL rendering engine.
 
